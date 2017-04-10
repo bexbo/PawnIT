@@ -25,6 +25,11 @@ q4='{ "query": [ { "code": "Region", "selection": { "filter": "vs:RegionKommun07
 
 
 Energidata (MWh) efter region, kategori, energityp och år
-
+SO MANY FACTORS
 url5='http://api.scb.se/OV0104/v1/doris/sv/ssd/START/EN/EN0203/EnergiKommKat'
 q5='{ "query": [ { "code": "Region", "selection": { "filter": "item", "values": [ "17" ] } }, { "code": "Kategori", "selection": { "filter": "item", "values": [ "9", "91", "92", "93", "94", "95", "96", "961", "9611", "962", "963" ] } }, { "code": "Energityp", "selection": { "filter": "item", "values": [ "14", "16", "Totalt" ] } }, { "code": "Tid", "selection": { "filter": "item", "values": [ "2008" ] } } ], "response": { "format": "px" } }'
+
+Elproduktion och bränsleanvändning (MWh) efter region, produktionssätt, bränsletyp och år
+elproduktion, summa produktionssätt
+url6='http://api.scb.se/OV0104/v1/doris/sv/ssd/START/EN/EN0203/ProdbrElOv'
+q6='{ "query": [ { "code": "Region", "selection": { "filter": "item", "values": [ "17" ] } }, { "code": "Produktionssatt", "selection": { "filter": "item", "values": [ "Totalt" ] } }, { "code": "Bransle", "selection": { "filter": "item", "values": [ "17", "950" ] } }, { "code": "Tid", "selection": { "filter": "item", "values": [ "2008" ] } } ], "response": { "format": "px" } }'
