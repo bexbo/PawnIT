@@ -11,7 +11,7 @@ sql_string_4 = "select Zip, City, Annual_Revenue, Number_Of_Employee, Annual_Num
 foo ="select * from dbo.SFA_Opportunity"
 boo ='select [CustomerDATA].[dbo].[Contact].Company_Id FROM [CustomerDATA].[dbo].[Company]  join [CustomerDATA].[dbo].[Contact] on [CustomerDATA].[dbo].[Company].[Company_Id]=[CustomerDATA].[dbo].[Contact].Company_Id;'
 
-query = open('Queries.txt','r')
+query = open('sqlQueries.txt','r')
 
 loo = query.read()
 

@@ -42,4 +42,4 @@ SELECT [Opportunity_Name]
       ,[X_Dont_Email_Last_Change]
       ,[X_SMS_Number]
       ,[X_KIC_Customer_Ref]
-  FROM [CustomerDATA].[dbo].[Contact] as a join [CustomerDATA].[dbo].[SFA_Opportunity] on a.Contact_Id= [CustomerDATA].[dbo].[SFA_Opportunity].Contact_Id;
+  FROM [CustomerDATA].[dbo].[Contact] as a join [CustomerDATA].[dbo].[SFA_Opportunity] on a.Contact_Id= [CustomerDATA].[dbo].[SFA_Opportunity].Contact_Id WHERE a.Zip = '%s';
