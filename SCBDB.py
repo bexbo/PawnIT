@@ -27,7 +27,9 @@ class SCBData:
     def appendToList(self,data):
         for row in data:
             for value in row['values']:
-                self.featureList.append(value)
+                if value == '.' or value == '..':
+                    value = 0
+                self.featureList.append(float(value))
 
 
 
