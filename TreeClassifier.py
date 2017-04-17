@@ -2,15 +2,17 @@ import SCBDB
 import time
 from sklearn import tree
 import numpy
+from kommun_mapper import kommunDict
 
 start = time.time()
 
-
+kommunDict = kommunDict()
 kommunlist = numpy.array(SCBDB.kommunToData('kommuner.txt'))
 
 clf = tree.DecisionTreeClassifier()
 klasser = numpy.array([1261,1266,1276,1280,1281])
 clf = clf.fit(kommunlist,klasser)
+
 
 test = SCBDB.SCBData(1272).featureList
 print(clf.predict(test))

@@ -1,4 +1,4 @@
-def KommunDict():
+def kommunDict():
     kommuner = open('all_kommuner.txt','r')
 
     kommuner=kommuner.read()
