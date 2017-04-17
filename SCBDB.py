@@ -36,7 +36,7 @@ def kommunToData(filename):
     kommuner = open(filename,'r')
 
     kommuner = kommuner.readlines()
-    kommunlist= kommunToData(kommuner)
+
     kommunlist = []
     for kommun in kommuner:
         kommun = kommun.strip('\n').strip(',').strip('"')
