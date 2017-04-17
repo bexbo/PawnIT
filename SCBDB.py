@@ -4,9 +4,6 @@ import time
 
 
 class SCBData:
-    municipalities = '"1261"'
-
-
     def __init__(self,postNumber):
         self.featureList = []
         self.postNumber=postNumber
@@ -40,7 +37,6 @@ class SCBData:
 
 
 
-#1261 = kävlinge
 
 kommuner = open('kommuner.txt','r')
 kommuner = kommuner.readlines()
@@ -52,4 +48,3 @@ for kommun in kommuner:
 
 for kommun in kommunlist:
     print(kommun.featureList)
-
