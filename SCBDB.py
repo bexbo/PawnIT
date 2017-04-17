@@ -22,7 +22,7 @@ class SCBData:
 
             data = json.loads(r.content[3:])['data']
             self.appendToList(data)
-            time.sleep(1) #do not remove, only 10 requests per 10 seconds to the DB are allowed
+            time.sleep(0.2) #do not remove, only 10 requests per 10 seconds to the DB are allowed
 
     def appendToList(self,data):
         for row in data:

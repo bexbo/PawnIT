@@ -6,7 +6,7 @@ from kommun_mapper import kommunDict
 
 start = time.time()
 
-kommunDict = kommunDict()
+kommunMap = kommunDict()
 kommunlist = numpy.array(SCBDB.kommunToData('kommuner.txt'))
 
 clf = tree.DecisionTreeClassifier()
@@ -14,12 +14,10 @@ klasser = numpy.array([1261,1266,1276,1280,1281])
 clf = clf.fit(kommunlist,klasser)
 
 
-test = SCBDB.SCBData(1272).featureList
-print(clf.predict(test))
-
-test = SCBDB.SCBData(1272).featureList
-clf.predict(test)
-
+test = SCBDB.SCBData(1381).featureList
+prediction = clf.predict(numpy.array(test))
+prediction= str(prediction[0])
+print(kommunMap[prediction])
 
 
 print(time.time()-start )
