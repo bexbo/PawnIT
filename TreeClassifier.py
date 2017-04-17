@@ -8,11 +8,6 @@ start = time.time()
 kommunlist = SCBDB.kommunToData('kommuner.txt')
 
 
-for kommun in kommunlist:
-    for f in kommun:
-        print(type(f))
-        print(f)
-
 clf = tree.DecisionTreeClassifier()
 klasser = [1261,1266,1276,1280,1281]
 clf = clf.fit(kommunlist,klasser)
