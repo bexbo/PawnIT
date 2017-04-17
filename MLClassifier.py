@@ -8,7 +8,7 @@ def naive_bayes():
     X = np.array([[-1,-1],[-2,-1],[-3,-2],[1,1],[2,1],[3,2]])
     kommunData = SCBDB.kommunToData('kommuner.txt')
     print(kommunData)
-    kommunist = np.array(kommunData)
+    kommunist = np.array(kommunData).astype(np.float)
     print(kommunist)
     #classes
     Y = np.array([1,1,1,2,2,2])
