@@ -41,8 +41,7 @@ def kommunToData(filename):
     for kommun in kommuner:
         kommun = kommun.strip('\n').strip(',').strip('"')
         foo = SCBData(kommun)
-        kommunlist.append(foo)
-
+        kommunlist.append(foo.featureList)
 
     return kommunlist
 
