@@ -22,7 +22,8 @@ def naive_bayes():
     testKommun = SCBDB.SCBData(1381)
     predict = clf.predict(testKommun.featureList)
     predict = str(predict[0])
-    print(km.kommunMap[predict])
+    k = km.kommunDict()
+    print(k[predict])
 
     #print(clf.predict([[1,-1]]))
     #clf_pf = GaussianNB()
