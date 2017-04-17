@@ -6,9 +6,11 @@ from SCBDB import *
 def naive_bayes():
     #training data
     X = np.array([[-1,-1],[-2,-1],[-3,-2],[1,1],[2,1],[3,2]])
-    kommuner = SCBDB.kommunToData('kommuner.txt')
+    kommunerlist = SCBDB.kommunToData('kommuner.txt')
+
     #classes
     Y = np.array([1,1,1,2,2,2])
+    
     clf = GaussianNB()
     GaussianNB(priors=None)
     clf.fit(X,Y)
