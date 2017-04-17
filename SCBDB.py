@@ -31,8 +31,8 @@ class SCBData:
 
 
 
-def kommunToData(kommuner):
-    kommuner = open(kommuner,'r')
+def kommunToData(filename):
+    kommuner = open(filename,'r')
     kommuner = kommuner.readlines()
     kommunlist= kommunToData(kommuner)
     kommunlist = []
