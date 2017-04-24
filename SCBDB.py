@@ -12,14 +12,9 @@ class SCBData:
         self.postQueries()
 
     def postQueries(self):
-
-
         for i in range(0,len(self.queries)):
-
             self.queries[i] = self.queries[i] % self.postNumber
             r = requests.post(self.urls[i], self.queries[i])
-
-
             data = json.loads(r.content[3:])['data']
             self.appendToList(data)
             time.sleep(0.2) #do not remove, only 10 requests per 10 seconds to the DB are allowed
@@ -30,8 +25,6 @@ class SCBData:
                 if value == '.' or value == '..':
                     value = 0
                 self.featureList.append(float(value))
-
-
 
 
 def kommunToData(filename):
@@ -46,6 +39,7 @@ def kommunToData(filename):
         kommunlist.append(foo.featureList)
 
     return kommunlist
+
 
 
 # kommuner = open('kommuner.txt','r')
