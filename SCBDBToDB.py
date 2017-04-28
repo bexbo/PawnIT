@@ -16,11 +16,10 @@ kommunlist = []
 for kommun in kommuner:
     kommunlist.append(kommun)
 
-print(kommunlist)
+
 
 d= shelve.open('kommundata')
 kommuner = kommunlist[160:]
-
 
 
 for kommun in kommuner:
@@ -33,4 +32,3 @@ for kommun in kommuner:
 
 
 
-#print(bar.featureList)
