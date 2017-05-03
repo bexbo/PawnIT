@@ -1,5 +1,6 @@
 #Class to calculate expected sales.
 import pyodbc
+import shelve
 
 class CRMDB:
     DBurl = 'DRIVER={SQL Server Native Client 10.0};SERVER=localhost;DATABASE=CustomerDATA;UID=kth;PWD=pass'
@@ -42,6 +43,60 @@ class CRMDB:
                 index += 1
             self.dictList.append(dict)
 
+DBurl = 'DRIVER={SQL Server Native Client 10.0};SERVER=localhost;DATABASE=CustomerDATA;UID=kth;PWD=pass'
+getZIP = "SELECT DISTINCT ZIP FROM [CustomerDATA].[dbo].[Company]"
+cnxn = pyodbc.connect(DBurl)
+cursor = cnxn.cursor()
+cursor.execute(getZIP)
+rows = cursor.fetchall()
 
-crmdb = CRMDB('71308')
-print(crmdb.dictList[1])
+zipList = []
+for row in rows:
+    row = str(row)
+    row = row.strip("', )").strip("('").strip(" ").replace(" ", "")
+   # print(row)
+    try:
+        row = int(row)
+        row =str(row)
+        zipList.append(row)
+    except ValueError:
+        #print(row)
+        continue
+
+translator=shelve.open('postnummerTokommun','w')
+
+i = 0
+j = []
+kommuner =['MalmÃ¶','Limhamn','Upplands VÃ¤sby','Sollentuna','Sigtuna','Lund','Bunkeflostrand','KungsÃ¤ngen','Arlandastad','Bro','Helsingborg','SÃ¶dertÃ¤lje','Nybrostrand','Ã¶stersund','Fagersta','Kristinehamn','Lidingö','Kiruna','Arjeplog','Handen','Vintrie','Lomma','Jokkmokk','TÃ¤by','StrÃ¶msund','Enköping','Alnarp','TygelsjÃ¶','Gånghester','Flen','MÃ¤rsta','Bara','Klagshamn','Lyckeby','HÃ¤ljarp']
+kod = [1280,1280,'0114','0163','0191','01281',1280,'0139','0191','0139',1283,'0181',1286,2380,1982,1781,'0186',2584,2506,'0136',1280,1262,2510,'0160',2313,'0381',1262,1280,1490,'0482','0191',1263,1280,1080,1282]
+dict ={}
+ä = 'Ã¤'
+ö = 'Ã¶'
+
+for i in range (0,len(kommuner)):
+    dict[kommuner[i]] = kod[i]
+    print(kommuner[i],kod[i])
+
+
+for zip in zipList:
+    try:
+
+       # thing = int(translator[zip])
+        temp = translator[zip]
+        try:
+            thing = int(translator[zip])
+        except:
+            if
+            
+            print(translator[zip])
+    except:
+        j.append(zip)
+        i = i+1
+
+print('hello')
+print(len(zipList))
+print(i)
+print(j)
+
+#crmdb = CRMDB('71308')
+#print(crmdb.dictList[1])
