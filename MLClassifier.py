@@ -3,27 +3,37 @@ from sklearn.naive_bayes import GaussianNB
 import SCBDB as SCBDB
 import kommun_mapper as km
 import time
+import shelve
+
 def naive_bayes():
     #training data
     #X = np.array([[-1,-1],[-2,-1],[-3,-2],[1,1],[2,1],[3,2]])
-    kommunData = SCBDB.kommunToData('kommuner.txt')
-    #print(kommunData)
-    kommunist = np.array(kommunData).astype(np.float)
-    #print(kommunist)
+    X_data = []
+    kommuner = SCBDB.kommunToData('kommuner.txt')
+    d = shelve.open('kommundata','r')
+    for i in kommuner:
+        try:
+            X_data.append(d[i])
+        except:
+            continue
+    X = np.array(X_data).astype(np.float)
     #classes
     #Y = np.array([1,1,1,2,2,2])
-    klasser = np.array([1261,1266,1276,1280,1281])
+    #klasser = np.array([1261,1266,1276,1280,1281])
+    Y = np.array([0,0,1,1,2])
     #print(klasser)
     clf = GaussianNB()
     GaussianNB(priors=None)
     #clf.fit(X,Y)
-    clf.fit(kommunist,klasser)
+    clf.fit(X,Y)
     #test data
-    testKommun = SCBDB.SCBData(1381)
-    predict = clf.predict(testKommun.featureList)
+    testKommun = d['1381']
+
+    predict = clf.predict(testKommun)
     predict = str(predict[0])
-    k = km.kommunDict()
-    print(k[predict])
+    print(predict)
+    #k = km.kommunDict()
+    #print(k[predict])
 
     #print(clf.predict([[1,-1]]))
     #clf_pf = GaussianNB()
@@ -32,4 +42,4 @@ def naive_bayes():
 
 start = time.time()
 naive_bayes()
-print(time.time()-start)
+print(time.time()-start, " sekunder")
