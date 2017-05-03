@@ -67,11 +67,12 @@ translator=shelve.open('postnummerTokommun','w')
 
 i = 0
 j = []
-kommuner =[Malm]
-kod = []
+kommuner =['MalmÃ¶','Limhamn','Upplands VÃ¤sby','Sollentuna','Sigtuna','Lund','Bunkeflostrand','KungsÃ¤ngen','Arlandastad','Bro','Helsingborg','SÃ¶dertÃ¤lje','Nybrostrand','Ã¶stersund','Fagersta','Kristinehamn','Lidingö','Kiruna','Arjeplog','Handen','Vintrie','Lomma','Jokkmokk','TÃ¤by','StrÃ¶msund','Enköping','Alnarp','TygelsjÃ¶','Gånghester','Flen','MÃ¤rsta','Bara','Klagshamn','Lyckeby','HÃ¤ljarp']
+kod = [1280,1280,'0114','0163','0191','01281',1280,'0139','0191','0139',1283,'0181',1286,2380,1982,1781,'0186',2584,2506,'0136',1280,1262,2510,'0160',2313,'0381',1262,1280,1490,'0482','0191',1263,1280,1080,1282]
 dict ={}
-ä = Ã¤
-ö = Ã¶
+ä = 'Ã¤'
+ö = 'Ã¶'
+
 for i in range (0,len(kommuner)):
     dict[kommuner[i]] = kod[i]
     print(kommuner[i],kod[i])
