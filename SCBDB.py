@@ -11,6 +11,9 @@ class SCBData:
         self.urls =['http://api.scb.se/OV0104/v1/doris/sv/ssd/START/HE/HE0110/HE0110G/Tab4bDispInkN','http://api.scb.se/OV0104/v1/doris/sv/ssd/START/HE/HE0104/TillgOversiktReg','http://api.scb.se/OV0104/v1/doris/sv/ssd/START/EN/EN0123/InstSolcell','http://api.scb.se/OV0104/v1/doris/sv/ssd/START/BE/BE0101/BE0101S/HushallT09','http://api.scb.se/OV0104/v1/doris/sv/ssd/START/EN/EN0203/EnergiKommKat','http://api.scb.se/OV0104/v1/doris/sv/ssd/START/EN/EN0203/ProdbrElOv']
         self.postQueries()
 
+    def __str__(self):
+        return self.featureList
+
     def postQueries(self):
         for i in range(0,len(self.queries)):
             self.queries[i] = self.queries[i] % self.postNumber
