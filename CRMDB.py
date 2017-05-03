@@ -70,6 +70,8 @@ j = []
 kommuner =[Malm]
 kod = []
 dict ={}
+ä = Ã¤
+ö = Ã¶
 for i in range (0,len(kommuner)):
     dict[kommuner[i]] = kod[i]
     print(kommuner[i],kod[i])
