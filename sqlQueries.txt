@@ -24,7 +24,6 @@ SELECT [Opportunity_Name]
       ,[X_Won_Date]
       ,[Zip]
       ,a.[Account_Manager_Id]
-
       ,[Contact_Name_Soundex]
       ,[Address_1]
       ,[Same_As_Primary_Company]

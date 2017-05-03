@@ -42,6 +42,27 @@ class CRMDB:
                 index += 1
             self.dictList.append(dict)
 
+DBurl = 'DRIVER={SQL Server Native Client 10.0};SERVER=localhost;DATABASE=CustomerDATA;UID=kth;PWD=pass'
+getZIP = "SELECT DISTINCT ZIP FROM [CustomerDATA].[dbo].[Company]"
+cnxn = pyodbc.connect(DBurl)
+cursor = cnxn.cursor()
+cursor.execute(getZIP)
+rows = cursor.fetchall()
 
-crmdb = CRMDB('71308')
-print(crmdb.dictList[1])
+zipList = []
+for row in rows:
+    row = str(row)
+    row = row.strip("', )").strip("('").strip(" ").replace(" ", "")
+   # print(row)
+    try:
+        row = int(row)
+        zipList.append(row)
+    except ValueError:
+        print(row)
+
+
+print(zipList)
+
+
+#crmdb = CRMDB('71308')
+#print(crmdb.dictList[1])
