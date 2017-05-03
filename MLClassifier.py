@@ -54,7 +54,7 @@ def naive_bayes():
     #test data
     predict = clf.predict(X_test)
     print(predict)
-
+    print(clf.score(X_test,Y_test))
     #print(clf.predict([[1,-1]]))
     #clf_pf = GaussianNB()
     #clf_pf.partial_fit(X,Y,np.unique(Y))
@@ -68,6 +68,8 @@ def naive_bayes():
     #ax.set_ylabel('$y$')
     plt.plot(X_test,Y_test,'bo',label="woot")
     plt.show()
+
+
 
 
 start = time.time()
