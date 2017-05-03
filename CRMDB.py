@@ -1,5 +1,6 @@
 #Class to calculate expected sales.
 import pyodbc
+import shelve
 
 class CRMDB:
     DBurl = 'DRIVER={SQL Server Native Client 10.0};SERVER=localhost;DATABASE=CustomerDATA;UID=kth;PWD=pass'
@@ -56,13 +57,34 @@ for row in rows:
    # print(row)
     try:
         row = int(row)
+        row =str(row)
         zipList.append(row)
     except ValueError:
-        print(row)
+        #print(row)
+        continue
 
+translator=shelve.open('postnummerTokommun','w')
 
-print(zipList)
+i = 0
+j = []
+for zip in zipList:
+    try:
 
+       # thing = int(translator[zip])
+        temp = translator[zip]
+        try:
+            thing = int(translator[zip])
+        except:
+            
+            print(translator[zip])
+    except:
+        j.append(zip)
+        i = i+1
+
+print('hello')
+print(len(zipList))
+print(i)
+print(j)
 
 #crmdb = CRMDB('71308')
 #print(crmdb.dictList[1])
