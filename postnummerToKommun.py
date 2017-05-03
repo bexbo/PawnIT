@@ -11,8 +11,6 @@ for line in textfile:
     line[1]=line[1][:3]+line[1][4:]
     print(line[1])
 
-
-
     if line[6] != '':
         d[line[1]] = line[6]
 

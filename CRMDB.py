@@ -67,6 +67,14 @@ translator=shelve.open('postnummerTokommun','w')
 
 i = 0
 j = []
+kommuner =[Malm]
+kod = []
+dict ={}
+for i in range (0,len(kommuner)):
+    dict[kommuner[i]] = kod[i]
+    print(kommuner[i],kod[i])
+
+
 for zip in zipList:
     try:
 
@@ -75,6 +83,7 @@ for zip in zipList:
         try:
             thing = int(translator[zip])
         except:
+            if
             
             print(translator[zip])
     except:
