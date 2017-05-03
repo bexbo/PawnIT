@@ -12,6 +12,7 @@ class CRMDB:
         self.dictList = []
 
         self.connectToDB()
+
         self.createDict()
 
 
@@ -21,12 +22,14 @@ class CRMDB:
         self.cursor = self.cnxn.cursor()
         query = open('sqlQueries.txt', 'r')
 
+
         self.readQ = query.read()
         query = self.readQ % self.zip
         #query = self.sqlQuery % self.zip
         #self.cursor.execute(self.readQ)
 
         self.cursor.execute(query)
+
         self.rows = self.cursor.fetchall()
 
 
@@ -43,58 +46,58 @@ class CRMDB:
                 index += 1
             self.dictList.append(dict)
 
-DBurl = 'DRIVER={SQL Server Native Client 10.0};SERVER=localhost;DATABASE=CustomerDATA;UID=kth;PWD=pass'
-getZIP = "SELECT DISTINCT ZIP FROM [CustomerDATA].[dbo].[Company]"
-cnxn = pyodbc.connect(DBurl)
-cursor = cnxn.cursor()
-cursor.execute(getZIP)
-rows = cursor.fetchall()
-
-zipList = []
-for row in rows:
-    row = str(row)
-    row = row.strip("', )").strip("('").strip(" ").replace(" ", "")
-   # print(row)
-    try:
-        row = int(row)
-        row =str(row)
-        zipList.append(row)
-    except ValueError:
-        #print(row)
-        continue
-
-translator=shelve.open('postnummerTokommun')
-i = 0
-j = []
-kommuner =['Burgsvik','Skinnskatteberg','GÃ¤vle','BorÃ¥s','GÃ¶teborg','Sundsvall','Kalmar','NorrkÃ¶ping','LinkÃ¶ping','Eskilstuna','UmeÃ¥','Tomteboda','Huddinge','SkogÃ¥s','VÃ¤rmdÃ¶','Ã„lta','Haninge','VÃ¤sterhaninge','TyresÃ¶','Gustavsberg','SaltsjÃ¶-Boo','Nacka','HÃ¤gersten','SkÃ¤rholmen','SkarpnÃ¤ck','Enskede','Farsta','Ã„lvsjÃ¶','Bandhagen','Johanneshov','Sundsvall','MalmÃ¶','Limhamn','Upplands VÃ¤sby','Sollentuna','Sigtuna','Lund','Bunkeflostrand','KungsÃ¤ngen','Arlandastad','Bro','Helsingborg','SÃ¶dertÃ¤lje','Nybrostrand','Ã–stersund','Fagersta','Kristinehamn','LidingÃ¶','Kiruna','Arjeplog','Handen','Vintrie','Lomma','Jokkmokk','TÃ¤by','StrÃ¶msund','EnkÃ¶ping','Alnarp','TygelsjÃ¶','GÃ¥nghester','Flen','MÃ¤rsta','Bara','Klagshamn','Lyckeby','HÃ¤ljarp','Stockholm','Solna','Karlstad','KÃ¶pingebro','Ystad','MalmÃ¶-Sturup','Stockholm-globen','Kista','Bromma','Stockholm-Arlanda','Landskrona','HackÃ¥s','Lilla Edet','KolbÃ¤ck','BjÃ¤rred','SaltsjÃ¶baden','Slite','Svedala','Falkenberg','StrÃ¶msholm','SegersÃ¤ng','HÃ¤ssleholm','KlÃ¥gerup','FinspÃ¥ng','Uppsala']
-kod = ['0980','1904','2180','1490','1480','2281','0880','0581','0580','0484','2480','0184','0126','0126','0120','0138','0136','0136','0138','0120','0182','0182','0180','0180','0180','0180','0180','0180','0180','0180',2281,1280,1280,'0114','0163','0191','1281',1280,'0139','0191','0139',1283,'0181',1286,2380,1982,1781,'0186',2584,2506,'0136',1280,1262,2510,'0160',2313,'0381',1262,1280,1490,'0482','0191',1263,1280,1080,1282,'0180','0184','1780',1286,1286,1280,'0180','0180','0180','0191',1286,2326,1462,1961,1262,'0182','0980',1262,1382,1961,'0192',1293,1263,'0562','0380']
-dict ={}
-ä = 'Ã¤'
-ö = 'Ã¶'
-
-print(len(kommuner))
-print(len(kod))
-for i in range (0,len(kommuner)):
-    dict[kommuner[i]] = kod[i]
-
-
-
-for kommun in translator:
-    #print(type(translator[kommun]))
-    if translator[kommun] in kommuner:
-        translator[kommun] = dict[translator[kommun]]
-
-m = 0
-for kommun in translator:
-    try:
-        if len(translator[kommun])>4:
-            m =m+1
-
-            print(translator[kommun])
-    except:
-        continue
-
-print(len(translator))
-print(m)
+# DBurl = 'DRIVER={SQL Server Native Client 10.0};SERVER=localhost;DATABASE=CustomerDATA;UID=kth;PWD=pass'
+# getZIP = "SELECT DISTINCT ZIP FROM [CustomerDATA].[dbo].[Company]"
+# cnxn = pyodbc.connect(DBurl)
+# cursor = cnxn.cursor()
+# cursor.execute(getZIP)
+# rows = cursor.fetchall()
+#
+# zipList = []
+# for row in rows:
+#     row = str(row)
+#     row = row.strip("', )").strip("('").strip(" ").replace(" ", "")
+#    # print(row)
+#     try:
+#         row = int(row)
+#         row =str(row)
+#         zipList.append(row)
+#     except ValueError:
+#         #print(row)
+#         continue
+#
+# translator=shelve.open('postnummerTokommun')
+# i = 0
+# j = []
+# kommuner =['Burgsvik','Skinnskatteberg','GÃ¤vle','BorÃ¥s','GÃ¶teborg','Sundsvall','Kalmar','NorrkÃ¶ping','LinkÃ¶ping','Eskilstuna','UmeÃ¥','Tomteboda','Huddinge','SkogÃ¥s','VÃ¤rmdÃ¶','Ã„lta','Haninge','VÃ¤sterhaninge','TyresÃ¶','Gustavsberg','SaltsjÃ¶-Boo','Nacka','HÃ¤gersten','SkÃ¤rholmen','SkarpnÃ¤ck','Enskede','Farsta','Ã„lvsjÃ¶','Bandhagen','Johanneshov','Sundsvall','MalmÃ¶','Limhamn','Upplands VÃ¤sby','Sollentuna','Sigtuna','Lund','Bunkeflostrand','KungsÃ¤ngen','Arlandastad','Bro','Helsingborg','SÃ¶dertÃ¤lje','Nybrostrand','Ã–stersund','Fagersta','Kristinehamn','LidingÃ¶','Kiruna','Arjeplog','Handen','Vintrie','Lomma','Jokkmokk','TÃ¤by','StrÃ¶msund','EnkÃ¶ping','Alnarp','TygelsjÃ¶','GÃ¥nghester','Flen','MÃ¤rsta','Bara','Klagshamn','Lyckeby','HÃ¤ljarp','Stockholm','Solna','Karlstad','KÃ¶pingebro','Ystad','MalmÃ¶-Sturup','Stockholm-globen','Kista','Bromma','Stockholm-Arlanda','Landskrona','HackÃ¥s','Lilla Edet','KolbÃ¤ck','BjÃ¤rred','SaltsjÃ¶baden','Slite','Svedala','Falkenberg','StrÃ¶msholm','SegersÃ¤ng','HÃ¤ssleholm','KlÃ¥gerup','FinspÃ¥ng','Uppsala']
+# kod = ['0980','1904','2180','1490','1480','2281','0880','0581','0580','0484','2480','0184','0126','0126','0120','0138','0136','0136','0138','0120','0182','0182','0180','0180','0180','0180','0180','0180','0180','0180',2281,1280,1280,'0114','0163','0191','1281',1280,'0139','0191','0139',1283,'0181',1286,2380,1982,1781,'0186',2584,2506,'0136',1280,1262,2510,'0160',2313,'0381',1262,1280,1490,'0482','0191',1263,1280,1080,1282,'0180','0184','1780',1286,1286,1280,'0180','0180','0180','0191',1286,2326,1462,1961,1262,'0182','0980',1262,1382,1961,'0192',1293,1263,'0562','0380']
+# dict ={}
+# ä = 'Ã¤'
+# ö = 'Ã¶'
+#
+# print(len(kommuner))
+# print(len(kod))
+# for i in range (0,len(kommuner)):
+#     dict[kommuner[i]] = kod[i]
+#
+#
+#
+# for kommun in translator:
+#     #print(type(translator[kommun]))
+#     if translator[kommun] in kommuner:
+#         translator[kommun] = dict[translator[kommun]]
+#
+# m = 0
+# for kommun in translator:
+#     try:
+#         if len(translator[kommun])>4:
+#             m =m+1
+#
+#             print(translator[kommun])
+#     except:
+#         continue
+#
+# print(len(translator))
+# print(m)
 #crmdb = CRMDB('71308')
 #print(crmdb.dictList[1])
