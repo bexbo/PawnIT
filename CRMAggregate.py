@@ -52,62 +52,80 @@ def createCRMDATA():
                 i = i + 1
 
 
-crm = shelve.open('CRMData')
-# print(len(crm))
-# for thing in crm:
-#     print(thing)
-#     print(crm[thing])
+#calculates the success rate for every kommun
+def calcSuccessRate():
+    crm = shelve.open('CRMData')
+    ilist=[]
+    jlist=[]
+    klist =[]
+    upper = 0
+    middle = 0
+    lower = 0
+    ulimit = 0.4 #worst rate for upper
+    mlimit = 0.2 #worst rate for medium
+    entrylimit = 4 #smallest amount of attempted sales to be in the returnlist
+    resDict= {}
+    for kommun in crm:
+        i = 0 #successful sales
+        j = 0 #unsuccessful sales
+        k = 0 #number of sales
+        for postal in crm[kommun]:
 
-ilist=[]
-jlist=[]
-klist =[]
-upper = 0
-middle = 0
-lower = 0
-ulimit = 0.4
-mlimit = 0.2
-entrylimit = 4
-for kommun in crm:
-    i = 0
-    j = 0
-    k = 0
-    for postal in crm[kommun]:
+            for sale in postal:
 
-        for sale in postal:
+                k =k+1
+                if sale['a.[Status] ']==8:
+                    i = i+1
+                elif sale['a.[Status] ']!=8:
+                    j = j+1
 
-            k =k+1
-            if sale['a.[Status] ']==8:
-                i = i+1
-            elif sale['a.[Status] ']!=8:
-                j = j+1
-
-   # print('\n')
+       # print('\n')
 
 
-    if k >= entrylimit:
-        if j == 0:
-            ilist.append(1)
-            upper = upper +1
-        elif i == 0:
-            lower = lower + 1
-            ilist.append(0)
-        else:
-            q = i/(i+j)
-            ilist.append(q)
-            if q >= ulimit:
-                upper =upper+1
-            elif q<ulimit and q>=mlimit:
-                middle=middle+1
+        if k >= entrylimit:
+            if j == 0:
+                ilist.append(1)
+                upper = upper +1
+                resDict[kommun] = '1'
+            elif i == 0:
+                lower = lower + 1
+                ilist.append(0)
+                resDict[kommun] = '3'
             else:
-                lower = lower+1
+                q = i/(i+j)
+                ilist.append(q)
+                if q >= ulimit:
+                    upper =upper+1
+                    resDict[kommun] = '1'
+                elif q<ulimit and q>=mlimit:
+                    middle=middle+1
+                    resDict[kommun] = '2'
+                else:
+                    lower = lower+1
+                    resDict[kommun] = '3'
 
-        klist.append(k)
-  #  jlist.append(j)
+            klist.append(k)
+      #  jlist.append(j)
+        returnlist =[]
+        result = 'upper: %(u)s  middle: %(m)s lower: %(l)s'
+        result = result %{'u':upper,'m':middle,'l':lower}
+    returnlist.append(result)
+    returnlist.append(ilist)
+    returnlist.append(klist)
+    return resDict
 
-ilist.sort()
-print(len(ilist),list(reversed(ilist)))
-print(len(klist),klist)
-print('upper: ', upper,' middle: ',middle,' lower: ',lower)
+
+        # ilist.sort()
+        # print(len(ilist),list(reversed(ilist)))
+        # print(len(klist),klist)
+        # print('upper: ', upper,' middle: ',middle,' lower: ',lower)
+
+
+d = calcSuccessRate()
+for thing in d:
+    print(d[thing],thing)
+
+
 #print(jlist)
        # print(sale['a.[Status] '])
 #createCRMDATA()
