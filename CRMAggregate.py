@@ -10,8 +10,12 @@ def createCRMDATA():
 
     cursor.execute('SELECT DISTINCT zip FROM [CustomerDATA].[dbo].[Contact] as a join [CustomerDATA].[dbo].[SFA_Opportunity] on a.Contact_Id= [CustomerDATA].[dbo].[SFA_Opportunity].Contact_Id;')
     zips = cursor.fetchall()
-
-    CRM = shelve.open('CRMData','w')
+    a = open('zips','w')
+    for zip in zips:
+        zip =str(zip)
+        a.write(zip)
+    return
+    CRM = shelve.open('CRMData',writeback=True)
     kommun = shelve.open('postnummerToKommun')
     kommundata=shelve.open('kommundata')
     i=0
@@ -39,20 +43,23 @@ def createCRMDATA():
                 d = crm.dictList
                 if d !=[]:
                     #print(zip)
+
                     CRM[kommun[zip]].append(d)
+
                # print(d)
 
             except:
                 i = i + 1
 
 
-crm = shelve.open('CRMData')
-print(len(crm))
-for thing in crm:
-    print(thing)
+# crm = shelve.open('CRMData')
+# print(len(crm))
+# for thing in crm:
+#     print(thing)
+#     print(crm[thing])
 
 
-#createCRMDATA()
+createCRMDATA()
     #
     # crm = CRMDB.CRMDB(zip)
     #
