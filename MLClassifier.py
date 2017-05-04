@@ -10,31 +10,43 @@ from sklearn.model_selection import train_test_split
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.metrics import confusion_matrix
 import itertools
+from sklearn.model_selection import cross_val_score
+from sklearn.feature_selection import VarianceThreshold
+
 def random_forest():
-    X = ""
-    Y = ""
+    X_train,X_test,Y_train,Y_test,X,Y = pre_process()
+
 
     clf = RandomForestClassifier(n_estimators=10)
     clf.fit(X,Y)
-    print("")
+    scores = cross_val_score(clf, X, Y)
+    print(scores , " (random forest score)")
 
-def naive_bayes():
+def pre_process():
     #training data
 
     X_data = []
     kommuner = []
     d = shelve.open('kommundata','r')
-    for key in d:
+
+    for key in d.keys():
+
         if not key.isalpha():
             kommuner.append(key)
+
     for i in kommuner:
         try:
             X_data.append(d[i])
         except:
             continue
-    X = np.array(X_data).astype(np.float)
 
+
+    X = np.array(X_data).astype(np.float)
     #classes
+    print(X)
+    sel = VarianceThreshold(threshold=(.8 * (1 - .8)))
+    sel.fit_transform(X)
+    print(X)
 
     target = []
 
@@ -53,6 +65,12 @@ def naive_bayes():
     Y = np.array(target) #0 = bad, 1 = ok, 2 = good
     X_train, X_test, Y_train, Y_test = train_test_split(
     X, Y, test_size=0.2)
+    d.close()
+
+    return X_train,X_test,Y_train,Y_test,X,Y
+
+def naive_bayes():
+    X_train,X_test,Y_train,Y_test,X,Y = pre_process()
     clf = GaussianNB()
     GaussianNB(priors=None)
     clf.fit(X_train,Y_train)
@@ -122,5 +140,7 @@ def plot_confusion_matrix(cm, classes,
     plt.xlabel('Predicted label')
 
 start = time.time()
+random_forest()
 naive_bayes()
+
 print(time.time()-start, " sekunder")
