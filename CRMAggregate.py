@@ -1,6 +1,7 @@
 import shelve
 import pyodbc
 import CRMDB
+import SCBDB
 
 
 def createCRMDATA():
@@ -63,7 +64,7 @@ def calcSuccessRate():
     lower = 0
     ulimit = 0.4 #worst rate for upper
     mlimit = 0.2 #worst rate for medium
-    entrylimit = 4 #smallest amount of attempted sales to be in the returnlist
+    entrylimit = 4 #smallest amount
     resDict= {}
     for kommun in crm:
         i = 0 #successful sales
@@ -100,8 +101,10 @@ def calcSuccessRate():
                 elif q<ulimit and q>=mlimit:
                     middle=middle+1
                     resDict[kommun] = '2'
+
                 else:
                     lower = lower+1
+
                     resDict[kommun] = '3'
 
             klist.append(k)
@@ -121,10 +124,21 @@ def calcSuccessRate():
         # print('upper: ', upper,' middle: ',middle,' lower: ',lower)
 
 
-d = calcSuccessRate()
-for thing in d:
-    print(d[thing],thing)
 
+
+#d = calcSuccessRate()
+#print(d)
+# plzwork = shelve.open('testdata')
+# i = 0
+# for kommun in d:
+#     data = SCBDB.SCBData(kommun)
+#     plzwork[kommun] = data.featureList
+#     print(i)
+#     i = i+1
+
+# for thing in d:
+#    print(d[thing],thing)
+#
 
 #print(jlist)
        # print(sale['a.[Status] '])

@@ -12,53 +12,74 @@ from sklearn.metrics import confusion_matrix
 import itertools
 from sklearn.model_selection import cross_val_score
 from sklearn.feature_selection import VarianceThreshold
+from CRMAggregate import calcSuccessRate
 
 def random_forest():
     X_train,X_test,Y_train,Y_test,X,Y = pre_process()
 
 
-    clf = RandomForestClassifier(n_estimators=10)
-    clf.fit(X,Y)
+    clf = RandomForestClassifier(n_estimators=15)
+    clf.fit(X_train,Y_train)
+
     scores = cross_val_score(clf, X, Y)
+
+    predict = clf.predict(X_test)
+
+    print(clf.score(X_test, Y_test))
+    cnf_matrix = confusion_matrix(Y_test, predict)
+    class_names = [1, 2, 3]
+    plot_confusion_matrix(cnf_matrix, classes=class_names,
+                          title='Confusion matrix, without normalization')
+
+    plt.show()
+
     print(scores , " (random forest score)")
 
 def pre_process():
+    labeledData = calcSuccessRate()
     #training data
 
     X_data = []
     kommuner = []
-    d = shelve.open('kommundata','r')
+    d = shelve.open('testdata','r')
+    target = []
+    for kommun in labeledData:
+        X_data.append(d[kommun])
+        target.append(labeledData[kommun])
 
-    for key in d.keys():
 
-        if not key.isalpha():
-            kommuner.append(key)
 
-    for i in kommuner:
-        try:
-            X_data.append(d[i])
-        except:
-            continue
+
+    #
+    # for key in d.keys():
+    #
+    #     if not key.isalpha():
+    #         kommuner.append(key)
+    #
+    # for i in kommuner:
+    #     try:
+    #         X_data.append(d[i])
+    #     except:
+    #         continue
 
 
     X = np.array(X_data).astype(np.float)
     #classes
-    print(X)
+   # print(X)
     sel = VarianceThreshold(threshold=(.8 * (1 - .8)))
     sel.fit_transform(X)
-    print(X)
+    #print(X)
 
-    target = []
 
 ## THIS IS WHERE WE ADD THE CLASSIFICATIONS AFTER WE HAVE CALCULATED SUCCESSRATE ETC.
-
-    for i in range(len(X)):
-        if i < len(d)/3:
-            target.append(0)
-        elif i > len(d)/3 and i < 2*len(d)/3:
-            target.append(1)
-        else:
-            target.append(2)
+    #
+    # for i in range(len(X)):
+    #     if i < len(d)/3:
+    #         target.append(0)
+    #     elif i > len(d)/3 and i < 2*len(d)/3:
+    #         target.append(1)
+    #     else:
+    #         target.append(2)
 
 ##  REPLACE ABOVE CODE ACCORDING TO PREVIOUS COMMENT.
 
@@ -80,7 +101,7 @@ def naive_bayes():
                      np.linspace(ylim[0], ylim[1], 81))
     #test data
     predict = clf.predict(X_test)
-    print(predict)
+    print(predict,'Hello')
     print(clf.score(X_test,Y_test))
     cnf_matrix = confusion_matrix(Y_test, predict)
     class_names = [1,2,3]
@@ -139,8 +160,10 @@ def plot_confusion_matrix(cm, classes,
     plt.ylabel('True label')
     plt.xlabel('Predicted label')
 
+
 start = time.time()
-random_forest()
-naive_bayes()
+for i in range(0,10):
+    random_forest()
+#naive_bayes()
 
 print(time.time()-start, " sekunder")
