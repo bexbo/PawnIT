@@ -45,14 +45,19 @@ def pre_process():
     kommuner = []
     d = shelve.open('testdata','r')
     target = []
-    file = open('featureData','w')
 
+    banned_features = [24,33,45,51]
     for kommun in labeledData:
-        X_data.append(d[kommun])
+        i = 0
+        temp = []
+        for f in d[kommun]:
+            if i not in banned_features:
+                temp.append(f)
+            i += 1
+        X_data.append(temp)
         target.append(labeledData[kommun])
-        string = str(d[kommun]) + '\n'
-        file.write(string)
-    file.close()
+
+    d.close()
 
 
 
@@ -104,7 +109,7 @@ def pre_process():
 
     X_train, X_test, Y_train, Y_test = train_test_split(
     X, Y, test_size=0.2)
-    d.close()
+
     #print(X_train,X_test,Y_train,Y_test,X,Y)
     return X_train,X_test,Y_train,Y_test,X,Y
 
