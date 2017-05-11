@@ -1,7 +1,6 @@
 import numpy as np
 from sklearn.naive_bayes import GaussianNB
-import SCBDB as SCBDB
-import kommun_mapper as km
+
 import time
 import shelve
 from matplotlib import pyplot as plt
@@ -87,7 +86,7 @@ def pre_process():
     X_train, X_test, Y_train, Y_test = train_test_split(
     X, Y, test_size=0.2)
     d.close()
-
+    print(X_train,X_test,Y_train,Y_test,X,Y)
     return X_train,X_test,Y_train,Y_test,X,Y
 
 def naive_bayes():

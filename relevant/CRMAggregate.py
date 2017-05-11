@@ -109,9 +109,9 @@ def calcSuccessRate():
 
             klist.append(k)
       #  jlist.append(j)
-        returnlist =[]
-        result = 'upper: %(u)s  middle: %(m)s lower: %(l)s'
-        result = result %{'u':upper,'m':middle,'l':lower}
+    returnlist =[]
+    result = 'upper: %(u)s  middle: %(m)s lower: %(l)s'
+    result = result %{'u':upper,'m':middle,'l':lower}
     returnlist.append(result)
     returnlist.append(ilist)
     returnlist.append(klist)
