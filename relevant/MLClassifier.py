@@ -12,6 +12,9 @@ import itertools
 from sklearn.model_selection import cross_val_score
 from sklearn.feature_selection import VarianceThreshold
 from CRMAggregate import calcSuccessRate
+from sklearn.feature_selection import chi2
+from sklearn.feature_selection import SelectKBest
+from sklearn.feature_selection import SelectPercentile, f_classif
 
 def random_forest():
     X_train,X_test,Y_train,Y_test,X,Y = pre_process()
@@ -42,10 +45,14 @@ def pre_process():
     kommuner = []
     d = shelve.open('testdata','r')
     target = []
+    file = open('featureData','w')
+
     for kommun in labeledData:
         X_data.append(d[kommun])
         target.append(labeledData[kommun])
-
+        string = str(d[kommun]) + '\n'
+        file.write(string)
+    file.close()
 
 
 
@@ -65,8 +72,8 @@ def pre_process():
     X = np.array(X_data).astype(np.float)
     #classes
    # print(X)
-    sel = VarianceThreshold(threshold=(.8 * (1 - .8)))
-    sel.fit_transform(X)
+    #sel = VarianceThreshold(threshold=(.8 * (1 - .8)))
+
     #print(X)
 
 
@@ -83,10 +90,22 @@ def pre_process():
 ##  REPLACE ABOVE CODE ACCORDING TO PREVIOUS COMMENT.
 
     Y = np.array(target) #0 = bad, 1 = ok, 2 = good
+
+    X_indices = np.arange(X.shape[-1])
+    selector = SelectPercentile(f_classif, percentile=10)
+    selector.fit(X, Y)
+    scores = -np.log10(selector.pvalues_)
+    scores /= scores.max()
+    plt.bar(X_indices - .45, scores, width=.2,
+        label=r'Univariate score ($-Log(p_{value})$)', color='darkorange')
+
+    #sel = SelectKBest(chi2, k=10).fit_transform(X,Y)
+    #print(sel.shape)
+
     X_train, X_test, Y_train, Y_test = train_test_split(
     X, Y, test_size=0.2)
     d.close()
-    print(X_train,X_test,Y_train,Y_test,X,Y)
+    #print(X_train,X_test,Y_train,Y_test,X,Y)
     return X_train,X_test,Y_train,Y_test,X,Y
 
 def naive_bayes():
@@ -161,7 +180,7 @@ def plot_confusion_matrix(cm, classes,
 
 
 start = time.time()
-#random_forest()
+random_forest()
 naive_bayes()
 
 print(time.time()-start, " sekunder")

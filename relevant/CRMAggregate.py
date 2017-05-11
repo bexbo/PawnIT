@@ -1,56 +1,55 @@
 import shelve
-import pyodbc
-import CRMDB
-import SCBDB
+#import pyodbc
+#import CRMDB
+#import SCBDB
 
-
-def createCRMDATA():
-    DBurl = 'DRIVER={SQL Server Native Client 10.0};SERVER=localhost;DATABASE=CustomerDATA;UID=kth;PWD=pass'
-    cnxn = pyodbc.connect(DBurl)
-    cursor = cnxn.cursor()
-
-    cursor.execute('SELECT DISTINCT zip FROM [CustomerDATA].[dbo].[Contact] as a join [CustomerDATA].[dbo].[SFA_Opportunity] on a.Contact_Id= [CustomerDATA].[dbo].[SFA_Opportunity].Contact_Id;')
-    zips = cursor.fetchall()
-    a = open('zips','w')
-    for zip in zips:
-        zip =str(zip)
-        a.write(zip)
-    return
-    CRM = shelve.open('CRMData',writeback=True)
-    kommun = shelve.open('postnummerToKommun')
-    kommundata=shelve.open('kommundata')
-    i=0
-
-    for zip in zips:
-        zip = str(zip)
-        zip = zip.replace("'", "").replace("(", "").replace(")", "").replace(" ", "").replace(",", "")
-        try:
-            kommun[zip] = str(kommun[zip])
-            CRM[kommun[zip]]=[]
-        except:
-            continue
-    i=0
-    for zip in zips:
-        zip = str(zip)
-        zip = zip.replace("'","").replace("(","").replace(")","").replace(" ","").replace(",","")
-
-        i=i+1
-        if zip.isdigit():
-            try:
-                print(i)
-
-                crm = CRMDB.CRMDB(zip)
-                crm.createDict()
-                d = crm.dictList
-                if d !=[]:
-                    #print(zip)
-
-                    CRM[kommun[zip]].append(d)
-
-               # print(d)
-
-            except:
-                i = i + 1
+# def createCRMDATA():
+#     DBurl = 'DRIVER={SQL Server Native Client 10.0};SERVER=localhost;DATABASE=CustomerDATA;UID=kth;PWD=pass'
+#     cnxn = pyodbc.connect(DBurl)
+#     cursor = cnxn.cursor()
+#
+#     cursor.execute('SELECT DISTINCT zip FROM [CustomerDATA].[dbo].[Contact] as a join [CustomerDATA].[dbo].[SFA_Opportunity] on a.Contact_Id= [CustomerDATA].[dbo].[SFA_Opportunity].Contact_Id;')
+#     zips = cursor.fetchall()
+#     a = open('zips','w')
+#     for zip in zips:
+#         zip =str(zip)
+#         a.write(zip)
+#     return
+#     CRM = shelve.open('CRMData',writeback=True)
+#     kommun = shelve.open('postnummerToKommun')
+#     kommundata=shelve.open('kommundata')
+#     i=0
+#
+#     for zip in zips:
+#         zip = str(zip)
+#         zip = zip.replace("'", "").replace("(", "").replace(")", "").replace(" ", "").replace(",", "")
+#         try:
+#             kommun[zip] = str(kommun[zip])
+#             CRM[kommun[zip]]=[]
+#         except:
+#             continue
+#     i=0
+#     for zip in zips:
+#         zip = str(zip)
+#         zip = zip.replace("'","").replace("(","").replace(")","").replace(" ","").replace(",","")
+#
+#         i=i+1
+#         if zip.isdigit():
+#             try:
+#                 print(i)
+#
+#                 crm = CRMDB.CRMDB(zip)
+#                 crm.createDict()
+#                 d = crm.dictList
+#                 if d !=[]:
+#                     #print(zip)
+#
+#                     CRM[kommun[zip]].append(d)
+#
+#                # print(d)
+#
+#             except:
+#                 i = i + 1
 
 
 #calculates the success rate for every kommun
