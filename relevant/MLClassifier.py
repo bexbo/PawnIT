@@ -162,8 +162,7 @@ def plot_confusion_matrix(cm, classes,
 
 
 start = time.time()
-for i in range(0,10):
-    random_forest()
-#naive_bayes()
+#random_forest()
+naive_bayes()
 
 print(time.time()-start, " sekunder")
