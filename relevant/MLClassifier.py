@@ -15,29 +15,12 @@ from CRMAggregate import calcSuccessRate
 from sklearn.feature_selection import chi2
 from sklearn.feature_selection import SelectKBest
 from sklearn.feature_selection import SelectPercentile, f_classif
+from sklearn import svm
+from sklearn.metrics import classification_report
 
-def random_forest():
-    X_train,X_test,Y_train,Y_test,X,Y = pre_process()
-
-
-    clf = RandomForestClassifier(n_estimators=15)
-    clf.fit(X_train,Y_train)
-
-    scores = cross_val_score(clf, X, Y)
-
-    predict = clf.predict(X_test)
-
-    print(clf.score(X_test, Y_test))
-    cnf_matrix = confusion_matrix(Y_test, predict)
-    class_names = [1, 2, 3]
-    plot_confusion_matrix(cnf_matrix, classes=class_names,
-                          title='Confusion matrix, without normalization')
-
-    plt.show()
-
-    print(scores , " (random forest score)")
 
 def pre_process():
+
     labeledData = calcSuccessRate()
     #training data
 
@@ -59,42 +42,14 @@ def pre_process():
 
     d.close()
 
-
-
-    #
-    # for key in d.keys():
-    #
-    #     if not key.isalpha():
-    #         kommuner.append(key)
-    #
-    # for i in kommuner:
-    #     try:
-    #         X_data.append(d[i])
-    #     except:
-    #         continue
-
-
     X = np.array(X_data).astype(np.float)
     #classes
-   # print(X)
+
     #sel = VarianceThreshold(threshold=(.8 * (1 - .8)))
 
-    #print(X)
-
-
-## THIS IS WHERE WE ADD THE CLASSIFICATIONS AFTER WE HAVE CALCULATED SUCCESSRATE ETC.
-    #
-    # for i in range(len(X)):
-    #     if i < len(d)/3:
-    #         target.append(0)
-    #     elif i > len(d)/3 and i < 2*len(d)/3:
-    #         target.append(1)
-    #     else:
-    #         target.append(2)
-
-##  REPLACE ABOVE CODE ACCORDING TO PREVIOUS COMMENT.
-
     Y = np.array(target) #0 = bad, 1 = ok, 2 = good
+
+    X = SelectKBest(chi2, k=10).fit_transform(X,Y)
 
     X_indices = np.arange(X.shape[-1])
     selector = SelectPercentile(f_classif, percentile=10)
@@ -103,49 +58,75 @@ def pre_process():
     scores /= scores.max()
     plt.bar(X_indices - .45, scores, width=.2,
         label=r'Univariate score ($-Log(p_{value})$)', color='darkorange')
+    #plt.title('Selection of the top features.')
+    plt.show()
+
 
     #sel = SelectKBest(chi2, k=10).fit_transform(X,Y)
     #print(sel.shape)
 
     X_train, X_test, Y_train, Y_test = train_test_split(
-    X, Y, test_size=0.2)
-
+    X, Y, test_size=0.1)
     #print(X_train,X_test,Y_train,Y_test,X,Y)
     return X_train,X_test,Y_train,Y_test,X,Y
 
-def naive_bayes():
-    X_train,X_test,Y_train,Y_test,X,Y = pre_process()
+
+def svm_alg(X_train,X_test,y_train,y_test,X,y):
+    clf = svm.SVC(probability=True)
+    clf.fit(X_train,y_train)
+    y_pred = clf.predict(X_test)
+
+    cnf_matrix = confusion_matrix(y_test, y_pred)
+    target_names = ['1','2','3']
+    plot_confusion_matrix(cnf_matrix, classes=target_names,
+                          title='Confusion matrix bla, without normalization')
+
+    plt.show()
+    print("SVM")
+    print(classification_report(y_test, y_pred, target_names=target_names))
+    #print(clf.score(X_test, y_test), 'svc score')
+
+def random_forest(X_train,X_test,y_train,y_test,X,y):
+    #X_train,X_test,Y_train,Y_test,X,Y = pre_process()
+
+
+    clf = RandomForestClassifier(n_estimators=15)
+    clf.fit(X_train,y_train)
+
+    scores = cross_val_score(clf, X, y)
+
+    y_pred = clf.predict(X_test)
+
+    #print(clf.score(X_test, y_test), 'random forest score')
+    cnf_matrix = confusion_matrix(y_test, y_pred)
+    target_names = ['1','2','3']
+    plot_confusion_matrix(cnf_matrix, classes=target_names,
+                          title='Confusion matrix, without normalization')
+
+    plt.show()
+    print("Random Forest")
+    print(classification_report(y_test, y_pred, target_names=target_names))
+    #print(scores , ' random forest second score')
+
+
+def naive_bayes(X_train,X_test,y_train,y_test,X,y):
+    #X_train,X_test,Y_train,Y_test,X,Y = pre_process()
+    target_names = ['1','2','3']
     clf = GaussianNB()
     GaussianNB(priors=None)
-    clf.fit(X_train,Y_train)
-    xlim = (-1, 8)
-    ylim = (-1, 5)
-    xx, yy = np.meshgrid(np.linspace(xlim[0], xlim[1], 71),
-                     np.linspace(ylim[0], ylim[1], 81))
+    clf.fit(X_train,y_train)
+
     #test data
-    predict = clf.predict(X_test)
-    print(predict,'Hello')
-    print(clf.score(X_test,Y_test))
-    cnf_matrix = confusion_matrix(Y_test, predict)
-    class_names = [1,2,3]
-    #print(clf.predict([[1,-1]]))
-    #clf_pf = GaussianNB()
-    #clf_pf.partial_fit(X,Y,np.unique(Y))
-    #print(clf_pf.predict([[-0.8,-1]]))
+    y_pred = clf.predict(X_test)
+    print(classification_report(y_test, y_pred, target_names=target_names))
+    #print(clf.score(Y_test,y_pred), 'naive bayes score')
 
-    fig = plt.figure(figsize=(5, 3.75))
-    #ax = fig.add_subplot(111)
-    #ax.scatter(X[:, 0], X[:, 1], c=Y, cmap=plt.cm.binary, zorder=2)
+    cnf_matrix = confusion_matrix(y_test, y_pred)
 
-    #ax.set_xlabel('$x$')
-    #ax.set_ylabel('$y$')
-    plt.plot(X_test,Y_test,'bo',label="woot")
-
-    np.set_printoptions(precision=2)
 
     # Plot non-normalized confusion matrix
-    plt.figure()
-    plot_confusion_matrix(cnf_matrix, classes=class_names,
+    ##plt.figure()
+    plot_confusion_matrix(cnf_matrix, classes=target_names,
                       title='Confusion matrix, without normalization')
 
     plt.show()
@@ -180,12 +161,22 @@ def plot_confusion_matrix(cm, classes,
                  color="white" if cm[i, j] > thresh else "black")
 
     plt.tight_layout()
+    plt.title(alg_name)
+
     plt.ylabel('True label')
     plt.xlabel('Predicted label')
 
 
 start = time.time()
-random_forest()
-naive_bayes()
+X_train,X_test,Y_train,Y_test,X,Y = pre_process()
 
+alg_name = 'Naive Bayes'
+naive_bayes(X_train,X_test,Y_train,Y_test,X,Y)
+
+alg_name = 'Random Forest'
+random_forest(X_train,X_test,Y_train,Y_test,X,Y)
+
+alg_name = 'SVC'
+svm_alg(X_train,X_test,Y_train,Y_test,X,Y)
+#plt.show()
 print(time.time()-start, " sekunder")
