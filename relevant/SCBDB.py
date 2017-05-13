@@ -21,8 +21,10 @@ class SCBData:
             r = requests.post(self.urls[i], self.queries[i])
 
             data = json.loads(r.content[3:])['data']
+            print(len(data), data)
             self.appendToList(data)
             time.sleep(0.75) #do not remove, only 10 requests per 10 seconds to the DB are allowed
+
 
     def appendToList(self,data):
         for row in data:
@@ -46,6 +48,15 @@ def kommunToData(filename):
     return kommunlist
 
 
+foo = SCBData('1280')
+
+for thing in foo.queries:
+    print (thing)
+
+for bo in foo.urls:
+    print(bo)
+
+print(len(foo.featureList), foo.featureList)
 
 # kommuner = open('kommuner.txt','r')
 # kommuner = kommuner.readlines()
