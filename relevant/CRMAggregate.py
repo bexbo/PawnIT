@@ -92,7 +92,7 @@ def calcSuccessRate():
                 lower = lower + 1
                 ilist.append(0)
                 z = z+1
-                resDict[kommun] = '2'
+                resDict[kommun] = '3'
             else:
                 q = i/(i+j)
                 ilist.append(q)
@@ -131,6 +131,7 @@ def calcSuccessRate():
 # plzwork = shelve.open('testdatanoll')
 # i = 0
 # for kommun in d:
+#      print(d[kommun])
 #      data = SCBDB.SCBData(kommun)
 #      plzwork[kommun] = data.featureList
 #      print(i)
