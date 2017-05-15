@@ -1,7 +1,7 @@
 import shelve
 #import pyodbc
 #import CRMDB
-#import SCBDB
+import SCBDB
 
 # def createCRMDATA():
 #     DBurl = 'DRIVER={SQL Server Native Client 10.0};SERVER=localhost;DATABASE=CustomerDATA;UID=kth;PWD=pass'
@@ -61,8 +61,8 @@ def calcSuccessRate():
     upper = 0
     middle = 0
     lower = 0
-    ulimit = 0.4 #worst rate for upper
-    mlimit = 0.2 #worst rate for medium
+    ulimit = 0.1 #worst rate for upper
+    mlimit = 0.1 #worst rate for medium
     entrylimit = 4 #smallest amount
     resDict= {}
     for kommun in crm:
@@ -90,7 +90,7 @@ def calcSuccessRate():
             elif i == 0:
                 lower = lower + 1
                 ilist.append(0)
-                resDict[kommun] = '3'
+                resDict[kommun] = '2'
             else:
                 q = i/(i+j)
                 ilist.append(q)
@@ -104,13 +104,14 @@ def calcSuccessRate():
                 else:
                     lower = lower+1
 
-                    resDict[kommun] = '3'
+                    resDict[kommun] = '2'
 
             klist.append(k)
       #  jlist.append(j)
     returnlist =[]
     result = 'upper: %(u)s  middle: %(m)s lower: %(l)s'
     result = result %{'u':upper,'m':middle,'l':lower}
+    print(result)
     returnlist.append(result)
     returnlist.append(ilist)
     returnlist.append(klist)
@@ -122,18 +123,15 @@ def calcSuccessRate():
         # print(len(klist),klist)
         # print('upper: ', upper,' middle: ',middle,' lower: ',lower)
 
+d = calcSuccessRate()
 
-
-
-#d = calcSuccessRate()
-#print(d)
-# plzwork = shelve.open('testdata')
-# i = 0
-# for kommun in d:
-#     data = SCBDB.SCBData(kommun)
-#     plzwork[kommun] = data.featureList
-#     print(i)
-#     i = i+1
+plzwork = shelve.open('testdatatvaklasser')
+i = 0
+for kommun in d:
+    data = SCBDB.SCBData(kommun)
+    plzwork[kommun] = data.featureList
+    print(i)
+    i = i+1
 
 # for thing in d:
 #    print(d[thing],thing)
