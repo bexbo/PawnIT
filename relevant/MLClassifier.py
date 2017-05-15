@@ -26,7 +26,7 @@ def pre_process():
 
     X_data = []
     kommuner = []
-    d = shelve.open('testdatatvaklasser','r')
+    d = shelve.open('testdata','r')
     target = []
 
     banned_features = [24,33,45,51]
@@ -49,7 +49,7 @@ def pre_process():
 
     Y = np.array(target) #0 = bad, 1 = ok, 2 = good
 
-    X = SelectKBest(chi2, k=10).fit_transform(X,Y)
+    X = SelectKBest(chi2, k=50).fit_transform(X,Y)
 
     X_indices = np.arange(X.shape[-1])
     selector = SelectPercentile(f_classif, percentile=10)
@@ -62,7 +62,7 @@ def pre_process():
     plt.show()
 
 
-    #sel = SelectKBest(chi2, k=10).fit_transform(X,Y)
+    #X = SelectKBest(chi2, k=10).fit_transform(X,Y)
     #print(sel.shape)
 
     X_train, X_test, Y_train, Y_test = train_test_split(
