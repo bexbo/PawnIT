@@ -21,7 +21,7 @@ class SCBData:
             r = requests.post(self.urls[i], self.queries[i])
 
             data = json.loads(r.content[3:])['data']
-            print(len(data), data)
+
             self.appendToList(data)
             time.sleep(0.75) #do not remove, only 10 requests per 10 seconds to the DB are allowed
 

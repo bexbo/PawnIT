@@ -61,10 +61,11 @@ def calcSuccessRate():
     upper = 0
     middle = 0
     lower = 0
-    ulimit = 0.1 #worst rate for upper
-    mlimit = 0.1 #worst rate for medium
+    ulimit = 0.2 #worst rate for upper
+    mlimit = 0.00 #worst rate for medium
     entrylimit = 4 #smallest amount
     resDict= {}
+    z = 0
     for kommun in crm:
         i = 0 #successful sales
         j = 0 #unsuccessful sales
@@ -90,6 +91,7 @@ def calcSuccessRate():
             elif i == 0:
                 lower = lower + 1
                 ilist.append(0)
+                z = z+1
                 resDict[kommun] = '2'
             else:
                 q = i/(i+j)
@@ -97,14 +99,14 @@ def calcSuccessRate():
                 if q >= ulimit:
                     upper =upper+1
                     resDict[kommun] = '1'
-                elif q<ulimit and q>=mlimit:
+                elif q<ulimit: # and q>=mlimit:
                     middle=middle+1
                     resDict[kommun] = '2'
 
                 else:
                     lower = lower+1
 
-                    resDict[kommun] = '2'
+                    resDict[kommun] = '3'
 
             klist.append(k)
       #  jlist.append(j)
@@ -113,6 +115,7 @@ def calcSuccessRate():
     result = result %{'u':upper,'m':middle,'l':lower}
     print(result)
     returnlist.append(result)
+
     returnlist.append(ilist)
     returnlist.append(klist)
     return resDict
@@ -123,15 +126,15 @@ def calcSuccessRate():
         # print(len(klist),klist)
         # print('upper: ', upper,' middle: ',middle,' lower: ',lower)
 #
-# d = calcSuccessRate()
+d = calcSuccessRate()
 #
-# plzwork = shelve.open('testdatatvaklasser')
-# i = 0
-# for kommun in d:
-#     data = SCBDB.SCBData(kommun)
-#     plzwork[kommun] = data.featureList
-#     print(i)
-#     i = i+1
+plzwork = shelve.open('testdatanoll')
+i = 0
+for kommun in d:
+     data = SCBDB.SCBData(kommun)
+     plzwork[kommun] = data.featureList
+     print(i)
+     i = i+1
 
 # for thing in d:
 #    print(d[thing],thing)
