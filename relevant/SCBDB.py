@@ -47,16 +47,16 @@ def kommunToData(filename):
         kommunlist.append(kommun)
     return kommunlist
 
-
-foo = SCBData('1280')
-
-for thing in foo.queries:
-    print (thing)
-
-for bo in foo.urls:
-    print(bo)
-
-print(len(foo.featureList), foo.featureList)
+#
+# foo = SCBData('1280')
+#
+# for thing in foo.queries:
+#     print (thing)
+#
+# for bo in foo.urls:
+#     print(bo)
+#
+# print(len(foo.featureList), foo.featureList)
 
 # kommuner = open('kommuner.txt','r')
 # kommuner = kommuner.readlines()
