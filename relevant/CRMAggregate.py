@@ -126,17 +126,17 @@ def calcSuccessRate():
         # print(len(klist),klist)
         # print('upper: ', upper,' middle: ',middle,' lower: ',lower)
 #
-d = calcSuccessRate()
+# d = calcSuccessRate()
+# #
+# plzwork = shelve.open('testdatanoll')
+# i = 0
+# for kommun in d:
+#      data = SCBDB.SCBData(kommun)
+#      plzwork[kommun] = data.featureList
+#      print(i)
+#      i = i+1
 #
-plzwork = shelve.open('testdatanoll')
-i = 0
-for kommun in d:
-     data = SCBDB.SCBData(kommun)
-     plzwork[kommun] = data.featureList
-     print(i)
-     i = i+1
-
-# for thing in d:
+# # for thing in d:
 #    print(d[thing],thing)
 #
 
