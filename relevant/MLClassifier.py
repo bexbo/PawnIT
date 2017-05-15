@@ -84,6 +84,7 @@ def svm_alg(X_train,X_test,y_train,y_test,X,y):
     plt.show()
     print("SVM")
     print(classification_report(y_test, y_pred, target_names=target_names))
+    print(cross_val_score(clf,X,y,cv=5))
     #print(clf.score(X_test, y_test), 'svc score')
 
 def random_forest(X_train,X_test,y_train,y_test,X,y):
@@ -99,7 +100,7 @@ def random_forest(X_train,X_test,y_train,y_test,X,y):
 
     #print(clf.score(X_test, y_test), 'random forest score')
     cnf_matrix = confusion_matrix(y_test, y_pred)
-    target_names = ['1','2','3']
+    target_names = ['låg','medel','hög']
     plot_confusion_matrix(cnf_matrix, classes=target_names,
                           title='Confusion matrix, without normalization')
 
@@ -107,11 +108,11 @@ def random_forest(X_train,X_test,y_train,y_test,X,y):
     print("Random Forest")
     print(classification_report(y_test, y_pred, target_names=target_names))
     #print(scores , ' random forest second score')
-
+    print(cross_val_score(clf,X,y,cv=5))
 
 def naive_bayes(X_train,X_test,y_train,y_test,X,y):
     #X_train,X_test,Y_train,Y_test,X,Y = pre_process()
-    target_names = ['1','2','3']
+    target_names = ['låg','medel','hög']
     clf = GaussianNB()
     GaussianNB(priors=None)
     clf.fit(X_train,y_train)
@@ -130,7 +131,7 @@ def naive_bayes(X_train,X_test,y_train,y_test,X,y):
                       title='Confusion matrix, without normalization')
 
     plt.show()
-
+    print(cross_val_score(clf,X,y,cv=5))
 def plot_confusion_matrix(cm, classes,
                           normalize=False,
                           title='Confusion matrix',
