@@ -101,7 +101,7 @@ def calcSuccessRate():
                     resDict[kommun] = '1'
                 elif q<ulimit: # and q>=mlimit:
                     middle=middle+1
-                    resDict[kommun] = '2'
+                    resDict[kommun] = '1'
 
                 else:
                     lower = lower+1

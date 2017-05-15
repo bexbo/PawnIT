@@ -47,28 +47,30 @@ def pre_process():
 
     #sel = VarianceThreshold(threshold=(.8 * (1 - .8)))
 
-    Y = np.array(target) #0 = bad, 1 = ok, 2 = good
+    y = np.array(target) #0 = bad, 1 = ok, 2 = good
 
-    X = SelectKBest(chi2, k=50).fit_transform(X,Y)
+    X = SelectKBest(chi2, k=10).fit_transform(X,y)
 
     X_indices = np.arange(X.shape[-1])
     selector = SelectPercentile(f_classif, percentile=10)
-    selector.fit(X, Y)
+    selector.fit(X, y)
     scores = -np.log10(selector.pvalues_)
     scores /= scores.max()
-    plt.bar(X_indices - .45, scores, width=.2,
-        label=r'Univariate score ($-Log(p_{value})$)', color='darkorange')
-    #plt.title('Selection of the top features.')
+    plt.bar(X_indices, scores, width=.2,
+        label=r'Univariate score ($-Log(p_{value})$)', color='orange')
+    ##plt.title('Selection of the top features.')
+    plt.xlabel('Feature index')
+    plt.ylabel('Score')
+    plt.title('ANOVA-score')
     plt.show()
 
 
-    #X = SelectKBest(chi2, k=10).fit_transform(X,Y)
-    #print(sel.shape)
 
-    X_train, X_test, Y_train, Y_test = train_test_split(
-    X, Y, test_size=0.2)
-    #print(X_train,X_test,Y_train,Y_test,X,Y)
-    return X_train,X_test,Y_train,Y_test,X,Y
+
+    X_train, X_test, y_train, y_test = train_test_split(
+    X, y, test_size=0.2)
+    #print(X_train,X_test,y_train,y_test,X,y)
+    return X_train,X_test,y_train,y_test,X,y
 
 
 def svm_alg(X_train,X_test,y_train,y_test,X,y):
@@ -77,20 +79,21 @@ def svm_alg(X_train,X_test,y_train,y_test,X,y):
     y_pred = clf.predict(X_test)
 
     cnf_matrix = confusion_matrix(y_test, y_pred)
-    target_names = ['hög','medel','låg']
+    target_names = ['hög','låg']
     plot_confusion_matrix(cnf_matrix, classes=target_names,
                           title='Confusion matrix bla, without normalization')
 
     plt.show()
     print("SVM")
     print(classification_report(y_test, y_pred, target_names=target_names))
+
     print(cross_val_score(clf,X,y,cv=5))
     #print(clf.score(X_test, y_test), 'svc score')
 
 def random_forest(X_train,X_test,y_train,y_test,X,y):
 
 
-    clf = RandomForestClassifier(n_estimators=15)
+    clf = RandomForestClassifier(n_estimators=1000,oob_score=True,random_state=10,n_jobs=-1)
     clf.fit(X_train,y_train)
 
     scores = cross_val_score(clf, X, y)
@@ -99,7 +102,7 @@ def random_forest(X_train,X_test,y_train,y_test,X,y):
 
     #print(clf.score(X_test, y_test), 'random forest score')
     cnf_matrix = confusion_matrix(y_test, y_pred)
-    target_names = ['hög','medel', 'låg']
+    target_names = ['hög', 'låg']
     plot_confusion_matrix(cnf_matrix, classes=target_names,
                           title='Confusion matrix, without normalization')
 
@@ -107,11 +110,11 @@ def random_forest(X_train,X_test,y_train,y_test,X,y):
     print("Random Forest")
     print(classification_report(y_test, y_pred, target_names=target_names))
     #print(scores , ' random forest second score')
-    print(cross_val_score(clf,X,y,cv=5))
+    #print(cross_val_score(clf,X,y,cv=5,n_jobs=-1))
 
 def naive_bayes(X_train,X_test,y_train,y_test,X,y):
     #X_train,X_test,Y_train,Y_test,X,Y = pre_process()
-    target_names = ['hög','medel','låg']
+    target_names = ['hög','låg']
     clf = GaussianNB()
     GaussianNB(priors=None)
     clf.fit(X_train,y_train)
