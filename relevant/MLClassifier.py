@@ -17,7 +17,11 @@ from sklearn.feature_selection import SelectKBest
 from sklearn.feature_selection import SelectPercentile, f_classif
 from sklearn import svm
 from sklearn.metrics import classification_report
-
+from sklearn.model_selection import cross_val_predict
+from sklearn import metrics
+from sklearn import preprocessing
+from sklearn.model_selection import ShuffleSplit
+from sklearn.pipeline import make_pipeline
 
 def pre_process():
 
@@ -49,7 +53,7 @@ def pre_process():
 
     y = np.array(target) #0 = bad, 1 = ok, 2 = good
 
-    X = SelectKBest(chi2, k=5).fit_transform(X,y)
+    X = SelectKBest(chi2, k=10).fit_transform(X,y)
 
     # X_indices = np.arange(X.shape[-1])
     # selector = SelectPercentile(f_classif, percentile=10)
@@ -93,7 +97,7 @@ def svm_alg(X_train,X_test,y_train,y_test,X,y):
 def random_forest(X_train,X_test,y_train,y_test,X,y):
 
 
-    clf = RandomForestClassifier(n_estimators=1000,oob_score=True,random_state=42,n_jobs=-1)
+    clf = RandomForestClassifier(n_estimators=10,oob_score=True,random_state=20,n_jobs=-1)
     clf.fit(X_train,y_train)
 
     scores = cross_val_score(clf, X, y)
@@ -134,7 +138,8 @@ def naive_bayes(X_train,X_test,y_train,y_test,X,y):
                       title='Confusion matrix, without normalization')
 
     plt.show()
-    #print(cross_val_score(clf,X,y,cv=5))
+    predict = cross_val_predict(clf,X,y,cv=5)
+    print(metrics.accuracy_score(y, predict))
     print(clf.score(X_test,y_test),'nb score')
 
 def plot_confusion_matrix(cm, classes,
@@ -173,16 +178,57 @@ def plot_confusion_matrix(cm, classes,
     plt.xlabel('Predicted label')
 
 
+
+
 start = time.time()
-X_train,X_test,Y_train,Y_test,X,Y = pre_process()
+X_train,X_test,y_train,y_test,X,y = pre_process()
 
 alg_name = 'Naive Bayes'
-naive_bayes(X_train,X_test,Y_train,Y_test,X,Y)
+naive_bayes(X_train,X_test,y_train,y_test,X,y)
 
 alg_name = 'Random Forest'
-random_forest(X_train,X_test,Y_train,Y_test,X,Y)
+random_forest(X_train,X_test,y_train,y_test,X,y)
 
 alg_name = 'SVC'
-svm_alg(X_train,X_test,Y_train,Y_test,X,Y)
+svm_alg(X_train,X_test,y_train,y_test,X,y)
 #plt.show()
 print(time.time()-start, " sekunder")
+
+
+scaler = preprocessing.StandardScaler().fit(X_train)
+X_train_transformed = scaler.transform(X_train)
+
+clf = GaussianNB(priors=None).fit(X_train_transformed,y_train)
+clf_rf = RandomForestClassifier(n_estimators=100,oob_score=True,random_state=20,n_jobs=-1).fit(X_train_transformed,y_train)
+clf_svm = svm.SVC(C=1).fit(X_train_transformed,y_train)
+
+X_test_transformed = scaler.transform(X_test)
+
+
+
+print((result[0][0]+result[1][1])/(result[0][0]+result[0][1]+result[1][0]+result[1][1]))
+print(clf.score(X_test_transformed, y_test))
+print(clf_rf.score(X_test_transformed,y_test))
+print(clf_svm.score(X_test_transformed,y_test))
+
+
+
+clf = make_pipeline(preprocessing.StandardScaler(),GaussianNB(priors=None))
+cv = ShuffleSplit(n_splits=5, test_size=0.2, random_state=0)
+
+print(cross_val_score(clf,X,y,cv=cv))
+
+#
+# result = [[0,0],[0,0]]
+# clf = GaussianNB(priors=None)
+# for x in range(10):
+#     X_train,X_test,y_train,y_test,X,y = pre_process()
+#     scaler = preprocessing.StandardScaler().fit(X_train)
+#     X_train_transformed = scaler.transform(X_train)
+#     clf.fit(X_train_transformed,y_train)
+#     X_test_transformed = scaler.transform(X_test)
+#     predicted = clf.predict(X_test_transformed)
+#     cm = confusion_matrix(y_test, predicted)
+#     for i in range(2):
+#         for j in range(2):
+#             result[i][j] = result[i][j] + cm[i][j]
