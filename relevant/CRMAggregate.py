@@ -113,7 +113,7 @@ def calcSuccessRate():
     returnlist =[]
     result = 'upper: %(u)s  middle: %(m)s lower: %(l)s'
     result = result %{'u':upper,'m':middle,'l':lower}
-    print(result)
+    #print(result)
     returnlist.append(result)
 
     returnlist.append(ilist)

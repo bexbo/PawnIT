@@ -53,7 +53,7 @@ def pre_process():
 
     y = np.array(target) #0 = bad, 1 = ok, 2 = good
 
-    X = SelectKBest(chi2, k=10).fit_transform(X,y)
+    X = SelectKBest(chi2, k=4).fit_transform(X,y)
 
     # X_indices = np.arange(X.shape[-1])
     # selector = SelectPercentile(f_classif, percentile=10)
@@ -78,7 +78,7 @@ def pre_process():
 
 
 def svm_alg(X_train,X_test,y_train,y_test,X,y):
-    clf = svm.SVC(probability=True)
+    clf = svm.SVC(C=1,random_state=42)
     clf.fit(X_train,y_train)
     y_pred = clf.predict(X_test)
 
@@ -97,7 +97,7 @@ def svm_alg(X_train,X_test,y_train,y_test,X,y):
 def random_forest(X_train,X_test,y_train,y_test,X,y):
 
 
-    clf = RandomForestClassifier(n_estimators=10,oob_score=True,random_state=20,n_jobs=-1)
+    clf = RandomForestClassifier(n_estimators=1000,oob_score=True,random_state=20,n_jobs=-1)
     clf.fit(X_train,y_train)
 
     scores = cross_val_score(clf, X, y)
@@ -142,6 +142,47 @@ def naive_bayes(X_train,X_test,y_train,y_test,X,y):
     print(metrics.accuracy_score(y, predict))
     print(clf.score(X_test,y_test),'nb score')
 
+def all_alg(X_train,X_test,y_train,y_test,X,y):
+
+    clf_rf = RandomForestClassifier(n_estimators=1000,oob_score=True,random_state=20,n_jobs=-1)
+    clf_nb = GaussianNB(priors=None)
+    clf_svc = svm.SVC(probability=True,random_state=20)
+
+    scaler = preprocessing.StandardScaler().fit(X_train)
+
+    #X_train_transformed = scaler.transform(X_train)
+
+    X_train_transformed = X_train
+    X_test_transformed = X_test
+
+    clf_rf.fit(X_train_transformed,y_train)
+    clf_nb.fit(X_train_transformed,y_train)
+    clf_svc.fit(X_train_transformed,y_train)
+
+    #X_test_transformed = scaler.transform(X_test)
+
+
+
+    #rf_predict = clf_rf.predict(X_test_transformed)
+    #nb_predict = clf_nb.predict(X_test_transformed)
+    #svc_predict = clf_svc.predict(X_test_transformed)
+
+    #print(clf_rf.score(X_test_transformed, y_test))
+    #print(clf_nb.score(X_test_transformed,y_test))
+    #print(clf_svc.score(X_test_transformed,y_test))
+
+    #rf_matrix = confusion_matrix(y_test, rf_predict)
+    #nb_matrix = confusion_matrix(y_test, nb_predict)
+    #svc_matrix = confusion_matrix(y_test, svc_predict)
+
+    #print(rf_matrix)
+    #print(nb_matrix)
+    #print(svc_matrix)
+
+    print(np.mean(cross_val_score(clf_rf,X,y,cv=5)),'rf')
+    print(np.mean(cross_val_score(clf_nb,X,y,cv=5)),'nb')
+    print(np.mean(cross_val_score(clf_svc,X,y,cv=5)),'svc')
+
 def plot_confusion_matrix(cm, classes,
                           normalize=False,
                           title='Confusion matrix',
@@ -184,39 +225,40 @@ start = time.time()
 X_train,X_test,y_train,y_test,X,y = pre_process()
 
 alg_name = 'Naive Bayes'
-naive_bayes(X_train,X_test,y_train,y_test,X,y)
+#naive_bayes(X_train,X_test,y_train,y_test,X,y)
 
 alg_name = 'Random Forest'
-random_forest(X_train,X_test,y_train,y_test,X,y)
+#random_forest(X_train,X_test,y_train,y_test,X,y)
 
 alg_name = 'SVC'
-svm_alg(X_train,X_test,y_train,y_test,X,y)
+#svm_alg(X_train,X_test,y_train,y_test,X,y)
 #plt.show()
+all_alg(X_train,X_test,y_train,y_test,X,y)
 print(time.time()-start, " sekunder")
 
 
-scaler = preprocessing.StandardScaler().fit(X_train)
-X_train_transformed = scaler.transform(X_train)
+#scaler = preprocessing.StandardScaler().fit(X_train)
+#X_train_transformed = scaler.transform(X_train)
 
-clf = GaussianNB(priors=None).fit(X_train_transformed,y_train)
-clf_rf = RandomForestClassifier(n_estimators=100,oob_score=True,random_state=20,n_jobs=-1).fit(X_train_transformed,y_train)
-clf_svm = svm.SVC(C=1).fit(X_train_transformed,y_train)
+# clf = GaussianNB(priors=None).fit(X_train_transformed,y_train)
+# clf_rf = RandomForestClassifier(n_estimators=1000,oob_score=True,random_state=20,n_jobs=-1).fit(X_train_transformed,y_train)
+# clf_svm = svm.SVC(C=1).fit(X_train_transformed,y_train)
+#
+# #X_test_transformed = scaler.transform(X_test)
+#
+#
+#
+# print(clf.score(X_test_transformed, y_test))
+# print(clf_rf.score(X_test_transformed,y_test))
+# print(clf_svm.score(X_test_transformed,y_test))
+#
+#
+#
+# clf = make_pipeline(preprocessing.StandardScaler(),GaussianNB(priors=None))
+# cv = ShuffleSplit(n_splits=5, test_size=0.2, random_state=0)
+#
+# print(cross_val_score(clf,X,y,cv=cv))
 
-X_test_transformed = scaler.transform(X_test)
-
-
-
-print((result[0][0]+result[1][1])/(result[0][0]+result[0][1]+result[1][0]+result[1][1]))
-print(clf.score(X_test_transformed, y_test))
-print(clf_rf.score(X_test_transformed,y_test))
-print(clf_svm.score(X_test_transformed,y_test))
-
-
-
-clf = make_pipeline(preprocessing.StandardScaler(),GaussianNB(priors=None))
-cv = ShuffleSplit(n_splits=5, test_size=0.2, random_state=0)
-
-print(cross_val_score(clf,X,y,cv=cv))
 
 #
 # result = [[0,0],[0,0]]
