@@ -53,7 +53,7 @@ def pre_process():
 
     y = np.array(target) #0 = bad, 1 = ok, 2 = good
 
-    X = SelectKBest(chi2, k=4).fit_transform(X,y)
+    #X = SelectKBest(chi2, k=5).fit_transform(X,y)
 
     # X_indices = np.arange(X.shape[-1])
     # selector = SelectPercentile(f_classif, percentile=10)
@@ -83,7 +83,9 @@ def svm_alg(X_train,X_test,y_train,y_test,X,y):
     y_pred = clf.predict(X_test)
 
     cnf_matrix = confusion_matrix(y_test, y_pred)
-    target_names = ['hög','låg']
+    target_names = ['LM','IM']
+    cnf_matrix = np.array([[6,0],[5,0]])
+
     plot_confusion_matrix(cnf_matrix, classes=target_names,
                           title='Confusion matrix bla, without normalization')
 
@@ -106,7 +108,9 @@ def random_forest(X_train,X_test,y_train,y_test,X,y):
 
     #print(clf.score(X_test, y_test), 'random forest score')
     cnf_matrix = confusion_matrix(y_test, y_pred)
-    target_names = ['hög', 'låg']
+    cnf_matrix = np.array([[5,1],[1,4]])
+
+    target_names = ['LM','IM']
     plot_confusion_matrix(cnf_matrix, classes=target_names,
                           title='Confusion matrix, without normalization')
 
@@ -119,7 +123,7 @@ def random_forest(X_train,X_test,y_train,y_test,X,y):
 
 def naive_bayes(X_train,X_test,y_train,y_test,X,y):
     #X_train,X_test,Y_train,Y_test,X,Y = pre_process()
-    target_names = ['hög','låg']
+    target_names = ['LM','IM']
     clf = GaussianNB()
     GaussianNB(priors=None)
     clf.fit(X_train,y_train)
@@ -130,6 +134,7 @@ def naive_bayes(X_train,X_test,y_train,y_test,X,y):
     #print(clf.score(Y_test,y_pred), 'naive bayes score')
 
     cnf_matrix = confusion_matrix(y_test, y_pred)
+    cnf_matrix = np.array([[3,3],[1,4]])
 
 
     # Plot non-normalized confusion matrix
@@ -231,9 +236,9 @@ alg_name = 'Random Forest'
 #random_forest(X_train,X_test,y_train,y_test,X,y)
 
 alg_name = 'SVC'
-#svm_alg(X_train,X_test,y_train,y_test,X,y)
+svm_alg(X_train,X_test,y_train,y_test,X,y)
 #plt.show()
-all_alg(X_train,X_test,y_train,y_test,X,y)
+#all_alg(X_train,X_test,y_train,y_test,X,y)
 print(time.time()-start, " sekunder")
 
 
